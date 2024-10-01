@@ -1,70 +1,59 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import Swiper from 'react-native-swiper'; // Importing Swiper for the image carousel
+import { GestureHandlerRootView } from 'react-native-gesture-handler'; // Importing gesture handler for handling swipes
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
+const App = () => {
+  // Array of images to display in the carousel
+  const images = [
+    { uri: ('../../assets/images/BB_911.png') },
+    { uri: 'https://example.com/image2.jpg' },
+    { uri: 'https://example.com/image3.jpg' },
+  ];
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <GestureHandlerRootView style={styles.container}>
+      {/* Title of the app, centered at the top */}
+      <Text style={styles.title}>Swiper App</Text>
+      {/* Swiper component to create a horizontal image carousel */}
+      <Swiper style={styles.swiper} showsPagination={true}>
+        {/* Mapping over images to create a slide for each one */}
+        {images.map((image, index) => (
+          <View key={index} style={styles.slide}>
+            {/* Image component to display the image */}
+            <Image source={image} style={styles.image} resizeMode="contain" />
+          </View>
+        ))}
+      </Swiper>
+    </GestureHandlerRootView>
   );
-}
+};
 
+// Styles for the components
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1, // Allows the container to take up the full height
+    justifyContent: 'flex-start', // Aligns children to the top of the container
+    alignItems: 'center', // Centers children horizontally
+    backgroundColor: '#fff', // Background color of the container
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 24, // Font size of the title
+    fontWeight: 'bold', // Bold font for the title
+    marginTop: 20, // Space above the title
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  swiper: {
+    height: 300, // Height of the swiper component
+    width: '100%', // Full width of the container
+  },
+  slide: {
+    flex: 1, // Takes up full space of the swiper
+    justifyContent: 'center', // Centers content vertically
+    alignItems: 'center', // Centers content horizontally
+  },
+  image: {
+    width: '100%', // Image will take full width of the slide
+    height: '100%', // Image will take full height of the slide
   },
 });
+
+export default App; // Exporting the App component
