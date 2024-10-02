@@ -1,59 +1,80 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import Swiper from 'react-native-swiper'; // Importing Swiper for the image carousel
-import { GestureHandlerRootView } from 'react-native-gesture-handler'; // Importing gesture handler for handling swipes
+import { StyleSheet, View, Image, Button } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Swiper from 'react-native-swiper'; // Ensure this library is installed
 
 const App = () => {
-  // Array of images to display in the carousel
   const images = [
-    { uri: ('../../assets/images/BB_911.png') },
-    { uri: 'https://example.com/image2.jpg' },
-    { uri: 'https://example.com/image3.jpg' },
+    require('../../assets/images/BB_911.png'), // Local image
+    require('../../assets/images/cinemaImg.png'), // Local image
+    require('../../assets/images/stayInImg.png'), // Local image
   ];
+
   return (
-    <GestureHandlerRootView style={styles.container}>
-      {/* Title of the app, centered at the top */}
-      <Text style={styles.title}>Swiper App</Text>
-      {/* Swiper component to create a horizontal image carousel */}
-      <Swiper style={styles.swiper} showsPagination={true}>
-        {/* Mapping over images to create a slide for each one */}
-        {images.map((image, index) => (
-          <View key={index} style={styles.slide}>
-            {/* Image component to display the image */}
-            <Image source={image} style={styles.image} resizeMode="contain" />
+    <View style={styles.outerContainer}>
+      <GestureHandlerRootView style={styles.container}>
+        <Swiper
+          style={styles.swiper}
+          showsPagination={false} // Hide the default pagination
+        >
+          {images.map((image, index) => (
+            <View key={index} style={styles.maroonSlide}>
+              {/* Displaying the image in the swiper */}
+              <Image
+                source={image} // Directly use the image source
+                style={styles.image} // Image styles for consistency
+                resizeMode='stretch'// Ensures the image is fully visible without stretching
+              />
+            </View>
+          ))}
+        </Swiper>
+        <View style={styles.btnContainer}>
+            <Button
+              title="Get Started"
+            />
           </View>
-        ))}
-      </Swiper>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </View>
   );
 };
 
-// Styles for the components
 const styles = StyleSheet.create({
-  container: {
-    flex: 1, // Allows the container to take up the full height
-    justifyContent: 'flex-start', // Aligns children to the top of the container
-    alignItems: 'center', // Centers children horizontally
-    backgroundColor: '#fff', // Background color of the container
+  outerContainer: {
+    flex: 1,
+    opacity: 1, // Optional opacity
+    backgroundColor: 'pink', // Example: Container background color
   },
-  title: {
-    fontSize: 24, // Font size of the title
-    fontWeight: 'bold', // Bold font for the title
-    marginTop: 20, // Space above the title
+  container: {
+    flex: 1,
   },
   swiper: {
-    height: 300, // Height of the swiper component
-    width: '100%', // Full width of the container
+    height: '100%', // Full height of the container
   },
-  slide: {
-    flex: 1, // Takes up full space of the swiper
-    justifyContent: 'center', // Centers content vertically
-    alignItems: 'center', // Centers content horizontally
+  maroonSlide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%', // Take full width of the screen
+    height: '100%', // Take full height of the screen
+    backgroundColor: 'transparent', // Transparent background
   },
   image: {
-    width: '100%', // Image will take full width of the slide
-    height: '100%', // Image will take full height of the slide
+    width: '100%', // Ensure image takes a percentage of the container
+    height: '100%', // Set to a percentage to fill the height of the container
+    maxHeight: '80%', // Optional: limit height to allow some space around the image
+    maxWidth: '80%', // Ensure image width does not exceed container
+    borderWidth: 2, // Width of the border
+    borderColor: 'black', // Color of the border
+    borderRadius: 10, // Rounded corners (optional)
+    marginBottom: 70, // Optional padding to ensure the image is not too close to the border
+    paddingHorizontal: 70, // Optional horizontal margin
+  },
+  btnContainer: {
+    position: 'absolute',
+    bottom: 50,
+    width: '100%',
+    alignItems: 'center',
   },
 });
 
-export default App; // Exporting the App component
+export default App;
