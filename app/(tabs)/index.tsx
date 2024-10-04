@@ -29,10 +29,11 @@ const App = () => {
           ))}
         </Swiper>
         <View style={styles.btnContainer}>
-            <Button
-              title="Get Started"
-            />
+          <View style={styles.btns}>
+            <Button title='Get Started' onPress={() => {}} />
+            <Button title='Sign In' onPress={() => {}} />
           </View>
+        </View>
       </GestureHandlerRootView>
     </View>
   );
@@ -70,10 +71,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 70, // Optional horizontal margin
   },
   btnContainer: {
-    position: 'absolute',
+    flexDirection: 'row',
     bottom: 50,
-    width: '100%',
+    position: 'absolute',
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  btns: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '50%',
   },
 });
 
