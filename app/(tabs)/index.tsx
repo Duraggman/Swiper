@@ -1,11 +1,10 @@
 import React from "react";
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity, PanResponder, Animated } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Swiper from "react-native-swiper"; // Ensure this library is installed
 import Icon from "react-native-vector-icons/FontAwesome"; // or any other icon set you prefer
 
 const App = () => {
-  const images = [
+  const images = [ // Array of images to display
     require("../../assets/images/BowlImg.png"), // Local image
     require("../../assets/images/cinemaImg.png"), // Local image
     require("../../assets/images/stayInImg.png"), // Local image
@@ -24,37 +23,104 @@ const App = () => {
     
     setTimeout(() => {
       // Move to the next slide
-      swiperRef.current.scrollBy(1);
       setCurrentSlide((prevSlide) => prevSlide + 1); // Update the current slide index
     }, 1000);
 
     // After 2 seconds, change the background back to pink without resetting the swiper
     setTimeout(() => {
       setBgColor("pink");
-    }, 2000);
+    }, 1000);
   };
 
-  return (
-    <View style={[styles.outerContainer, { backgroundColor: bgColor }]}>
+    // State for tracking the index of the currently displayed card
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+
+    // Animated value for card swiping
+    const pan = React.useRef(new Animated.ValueXY()).current;
+
+    // Create a PanResponder to handle swipe gestures
+    const panResponder = React.useRef(
+      PanResponder.create({
+        // Determine if a swipe gesture should be recognized
+        onMoveShouldSetPanResponder: (_, gestureState) => {
+          // Only recognize horizontal swipes (significant movement)
+          return Math.abs(gestureState.dx) > 20;
+        },
+        // Handle the movement of the card
+        onPanResponderMove: Animated.event(
+          [null, { dx: pan.x, dy: pan.y }], // Bind the x and y values to animated values
+          { useNativeDriver: false } // Do not use native driver for this animation
+        ),
+        // Handle the release of the swipe gesture
+        onPanResponderRelease: (e, gestureState) => {
+          const { dx } = gestureState; // Get the horizontal swipe distance
+  
+          // Determine if the swipe is valid (either left or right)
+          if (dx > 120) {
+            // Right swipe detected
+            Animated.timing(pan, {
+              toValue: { x: 500, y: gestureState.dy }, // Animate off to the right
+              duration: 200, // Duration of the animation
+              useNativeDriver: true, // Use native driver for better performance
+            }).start(() => {
+              pan.setValue({ x: 0, y: 0 }); // Reset the animated value
+              setCurrentIndex((prev) => (prev + 1) % images.length); // Move to the next image
+            });
+          } else if (dx < -120) {
+            // Left swipe detected
+            Animated.timing(pan, {
+              toValue: { x: -500, y: gestureState.dy }, // Animate off to the left
+              duration: 200,
+              useNativeDriver: true,
+            }).start(() => {
+              pan.setValue({ x: 0, y: 0 }); // Reset the animated value
+              setCurrentIndex((prev) => (prev + 1) % images.length); // Move to the next image
+            });
+          } else {
+            // If swipe was not significant, reset position
+            Animated.timing(pan, {
+              toValue: { x: 0, y: 0 }, // Reset back to the center
+              duration: 200,
+              useNativeDriver: true,
+            }).start();
+          }
+        },
+      })
+    ).current; // Use the current value of panResponder
+
+    return (
+      // Root view for gesture handling
       <GestureHandlerRootView style={styles.container}>
-        <Swiper
-          ref={swiperRef}
-          style={styles.swiper}
-          showsPagination={false} // Hide the default pagination
-          index={currentSlide} // Ensure swiper stays on the current slide
-          loop={false} // Disable looping for better control
-        >
-          {images.map((image, index) => (
-            <View key={index} style={styles.Slides}>
-              {/* Displaying the image in the swiper */}
-              <Image
-                source={image} // Directly use the image source
-                style={styles.image} // Image styles for consistency
-                resizeMode="stretch" // Ensures the image is fully visible without stretching
-              />
-            </View>
-          ))}
-        </Swiper>
+        <View style={styles.outerContainer}>
+          {/* Map through images and render cards */}
+          {images.map((image, index) => {
+            // Hide cards that have already been swiped away
+            if (index < currentIndex) return null; // Skip rendering for previous cards
+  
+            const isCurrentCard = index === currentIndex; // Check if this is the current card
+            const rotate = pan.x.interpolate({
+              inputRange: [-200, 200], // Define input range for rotation
+              outputRange: ["-30deg", "30deg"], // Define output range for rotation
+              extrapolate: "clamp", // Prevent output from going beyond the range
+            });
+  
+            return (
+              <Animated.View
+                key={index}
+                style={[styles.card,
+                  // Apply transformation only if this is the current card
+                  isCurrentCard ? { transform: [...pan.getTranslateTransform(), { rotate }] } : null,
+                  { zIndex: images.length - index }, // Ensure cards stack correctly
+                ]}
+                {...(isCurrentCard ? panResponder.panHandlers : {})} // Attach PanResponder handlers only to the current card
+              >
+                <Image source={image} style={styles.image} resizeMode="cover" /> {/* Render the image */}
+              </Animated.View>
+            );
+          })}
+        </View>
+
+
         <View style={styles.btnContainer}>
           <View style={styles.btns}>
             <TouchableOpacity style={styles.btnTO} onPress={() => changeColorAndSlide('green')}>
@@ -65,8 +131,7 @@ const App = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </GestureHandlerRootView>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -118,6 +183,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginHorizontal: 10,
   },
+  card: {
+    position: "absolute", // Stack cards on top of each other
+    width: "90%", // Set width of the card
+    height: "80%", // Set height of the card
+    borderRadius: 10, // Rounded corners for the card
+    overflow: "hidden", // Ensure no overflow from the card
+    },
 });
 
 export default App;
