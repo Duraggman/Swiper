@@ -21,7 +21,7 @@ const App = () => {
   // Function that changes the background color and goes to the next slide
   const changeColorAndSlide = (color: string) => {
     setBgColor(color);
-    
+  // check if the current slide is the last slide
     setTimeout(() => {
       // Move to the next slide
       swiperRef.current.scrollBy(1);
