@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { StyleSheet, View, Image, Button, Pressable } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Swiper from "react-native-swiper"; // Ensure this library is installed
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const App = () => {
   // Reference for swiper component
@@ -56,17 +57,17 @@ const App = () => {
       </Swiper>
       <View style={styles.btnContainer}>
         <View style={styles.btns}>
-          <Pressable style={styles.pBtns}>
-            <Button
-              title="Thumb"
-              onPress={() => changeButtonColor("green", swiperRef)}
-            />
+          <Pressable
+            style={styles.pBtns}
+            onPress={() => changeButtonColor("green", swiperRef)}
+          >
+            <Icon name="thumbs-up" size={30} color="green" />
           </Pressable>
-          <Pressable style={styles.pBtns}>
-            <Button
-              title="Next"
-              onPress={() => changeButtonColor("red", swiperRef)}
-            />
+          <Pressable
+            style={styles.pBtns}
+            onPress={() => changeButtonColor("red", swiperRef)}
+          >
+            <Icon name="thumbs-down" size={30} color="red" />
           </Pressable>
         </View>
       </View>
@@ -114,7 +115,13 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   pBtns: {
-    backgroundColor: "black",
+    width: 60, // Set width for the circular button
+    height: 60, // Set height for the circular button
+    justifyContent: 'center', // Center the icon vertically
+    alignItems: 'center', // Center the icon horizontally
+    backgroundColor: '#fff', // Background color of the button
+    borderRadius: 30, // Half of the width and height to make it circular
+    elevation: 3, // Optional: adds shadow on Android
   },
 });
 
