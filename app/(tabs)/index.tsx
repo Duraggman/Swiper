@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, Button, Pressable } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Swiper from "react-native-swiper"; // Ensure this library is installed
 import Icon from "react-native-vector-icons/FontAwesome";
+import LinearGradient from "react-native-linear-gradient";
 
 const App = () => {
   // Array of images to display in the swiper
@@ -18,9 +19,12 @@ const App = () => {
 
   // Btn size 
   const btnSize = 60;
+  
+  // Btn color
+  const btnClr = "white";
 
   // default bg color
-  const [bgColor, setBgColor] = useState("pink");
+  const [bgColor, setBgColor] = useState("#FB7155");
 
   //function to change the color of the L button
   const changeButtonColor = (
@@ -67,16 +71,16 @@ const App = () => {
       <View style={styles.btnContainer}>
         <View style={styles.btns}>
           <Pressable
-            style={styles.pBtns}
+            style={styles.lBtn}
             onPress={() => changeButtonColor("green", swiperRef)}
           >
-            <Icon name="heart" size={btnSize} color="green" />
+            <Icon name="heart" size={btnSize} color={btnClr} />
           </Pressable>
           <Pressable
-            style={styles.pBtns}
+            style={styles.rBtn}
             onPress={() => changeButtonColor("red", swiperRef)}
           >
-            <Icon name="close" size={btnSize} color="red" /> 
+            <Icon name="close" size={btnSize} color={btnClr} /> 
           </Pressable>
         </View>
       </View>
@@ -124,12 +128,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "55%",
   },
-  pBtns: {
+  lBtn: {
     width: 80, // Set width for the circular button
     height: 80, // Set height for the circular button
     justifyContent: 'center', // Center the icon vertically
     alignItems: 'center', // Center the icon horizontally
-    backgroundColor: '#fff', // Background color of the button
+    borderRadius: 40, // Half of the width and height to make it circular
+    elevation: 3, // Optional: adds shadow on Android
+    backgroundColor: "#EE508D", // Background color of the button
+  },
+  rBtn: {
+    width: 80, // Set width for the circular button
+    height: 80, // Set height for the circular button
+    justifyContent: 'center', // Center the icon vertically
+    alignItems: 'center', // Center the icon horizontally
+    backgroundColor: 'dark-red', // Background color of the button
     borderRadius: 40, // Half of the width and height to make it circular
     elevation: 3, // Optional: adds shadow on Android
   },
