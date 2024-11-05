@@ -5,8 +5,19 @@ import Swiper from "react-native-swiper"; // Ensure this library is installed
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const App = () => {
+  // Array of images to display in the swiper
+  const images = [
+    require("../../assets/images/BowlImg.png"), // Local image
+    require("../../assets/images/cinemaImg.png"), // Local image
+    require("../../assets/images/stayInImg.png"), // Local image
+  ];
+  
+
   // Reference for swiper component
   const swiperRef = useRef<Swiper>(null);
+
+  // Btn size 
+  const btnSize = 60;
 
   // default bg color
   const [bgColor, setBgColor] = useState("pink");
@@ -27,13 +38,10 @@ const App = () => {
     }
   };
 
-  const images = [
-    require("../../assets/images/BowlImg.png"), // Local image
-    require("../../assets/images/cinemaImg.png"), // Local image
-    require("../../assets/images/stayInImg.png"), // Local image
-  ];
+  //calcs the middle of the swiper
+  const swiperMid = Math.floor(images.length / 2);
 
-  return (
+  return (   
     // Background color uses the state above.
     <GestureHandlerRootView
       style={[styles.container, { backgroundColor: bgColor }]}
@@ -43,6 +51,7 @@ const App = () => {
         style={styles.swiper}
         showsPagination={false} // Hide the default pagination
         loop={false} // Prevent infinite loop
+        index={swiperMid} // Start from the middle slide
       >
         {images.map((image, index) => (
           <View key={index} style={styles.maroonSlide}>
@@ -61,13 +70,13 @@ const App = () => {
             style={styles.pBtns}
             onPress={() => changeButtonColor("green", swiperRef)}
           >
-            <Icon name="thumbs-up" size={30} color="green" />
+            <Icon name="heart" size={btnSize} color="green" />
           </Pressable>
           <Pressable
             style={styles.pBtns}
             onPress={() => changeButtonColor("red", swiperRef)}
           >
-            <Icon name="thumbs-down" size={30} color="red" />
+            <Icon name="close" size={btnSize} color="red" /> 
           </Pressable>
         </View>
       </View>
@@ -102,8 +111,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 70, // Optional horizontal margin
   },
   btnContainer: {
+    paddingTop: 60,
     flexDirection: "row",
-    bottom: 50,
+    bottom: 35,
     position: "absolute",
     alignItems: "center",
     justifyContent: "center",
@@ -112,15 +122,15 @@ const styles = StyleSheet.create({
   btns: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "50%",
+    width: "55%",
   },
   pBtns: {
-    width: 60, // Set width for the circular button
-    height: 60, // Set height for the circular button
+    width: 80, // Set width for the circular button
+    height: 80, // Set height for the circular button
     justifyContent: 'center', // Center the icon vertically
     alignItems: 'center', // Center the icon horizontally
     backgroundColor: '#fff', // Background color of the button
-    borderRadius: 30, // Half of the width and height to make it circular
+    borderRadius: 40, // Half of the width and height to make it circular
     elevation: 3, // Optional: adds shadow on Android
   },
 });
